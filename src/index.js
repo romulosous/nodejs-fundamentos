@@ -1,11 +1,11 @@
-const express = require('express')
-const { v4: uuidv4 } = require('uuid')
+const express = require("express");
+const { v4: uuidv4 } = require("uuid");
 
-const app = express()
+const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
-const customers = []
+const customers = [];
 
 /**
  * cpf - string
@@ -14,25 +14,25 @@ const customers = []
  * statement []
  */
 
-app.post('/account', (request, response) => {
-  const { cpf, name } = request.body
-  const id = uuidv4()
+app.post("/account", (request, response) => {
+  const { cpf, name } = request.body;
+
+  const customerAlreadyExists = customers.some(
+    (customer) => customer.cpf === cpf
+  );
+
+  if (customerAlreadyExists) {
+    return response.status(400).json({ error: "Customer already exists!" });
+  }
 
   customers.push({
     cpf,
     name,
-    id,
-    statement: []
-  })
+    id: uuidv4(),
+    statement: [],
+  });
 
-  return response.status(201).send()
+  return response.status(201).send();
+});
 
-  const cpfExistente = accounts.findIndex(account => {
-    return account.cpf === cpf
-  })
-  if (cpfExistente > 0) {
-    return response.json({ message: 'CPF Já Existente' })
-  }
-})
-
-app.listen(3333, () => console.log('App running'))
+app.listen(3333, () => console.log("App running"));
